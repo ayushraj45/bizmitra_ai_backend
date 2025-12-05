@@ -9,7 +9,7 @@ BizMitra AI Backend is a NodeJS service that powers BizMitra’s WhatsApp‑base
 - **Meta webhook handling** – Receives and processes Meta (WhatsApp) webhook events for messages, status updates, and delivery receipts.
 - **AI orchestration layer** – Connects BizMitra to ResponsesAPI / AgentsSDK, routing user messages through AI agents and returning structured responses to clients.
 - **Scheduling engine** – Manages time‑based jobs for follow‑ups, reminders, and other WhatsApp touchpoints.
-- **Website & workspace configuration** – Stores and serves configuration for websites, workspaces, and customer‑specific settings used by the dashboard and landing pages.
+- **Website & workspace configuration** – Fetches basic HTML to create instructions, stores and serves configuration for websites, workspaces, and customer‑specific settings used by the dashboard and landing pages.
 
 This project sits at the center of BizMitra’s messaging and automation stack.
 
@@ -19,7 +19,7 @@ This project sits at the center of BizMitra’s messaging and automation stack.
 
 - **Runtime**: NodeJS
 - **Architecture**: Express‑style layered design with controllers, services, models, and middleware.
-- **Database**: Configured via `db.js` with a dedicated connection layer for persistence.
+- **Database**: Postgres / Configured via `db.js` with a dedicated connection layer for persistence.
 - **Infrastructure**:
   - `docker-compose.yml` for containerized local and production‑like environments.
   - CI/CD configuration present in the repo to streamline deployment.
@@ -83,8 +83,8 @@ This demonstrates experience in designing extensible AI integration layers rathe
 
 BizMitra AI Backend includes a scheduling engine to keep conversations and workflows moving.
 
-- **Scheduled jobs**  
-  - Time‑based tasks to trigger follow‑up messages, check‑ins, reminders, or campaign steps.
+- **Scheduled appointments**  
+  - Schedules and reschedules appointments/events with potential cusotmers on business's Google Calendar 
 
 - **Configuration‑driven behavior**  
   - Schedules and triggers can be tied to workspace configuration, making automation behavior customizable per client.
