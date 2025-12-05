@@ -20,8 +20,6 @@ const app = express();
 const allowedOrigins = [
   'https://app.bizmitra-ai.com', 
   'https://widget.bizmitra-ai.com',
-  // 'http://localhost:5173', 
-  // 'http://localhost:3000'
 ];
 
 const corsOptions = {
@@ -49,7 +47,7 @@ app.use('/api/btasks', btaskRoutes);
 app.use('/api/chat', chatRoutes);
 
 // Global Error Handler (Must be last)
-app.use(errorHandler);
+app.use(errorHandler); 
 
 // Database Sync
 const initDb = async () => {

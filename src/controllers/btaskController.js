@@ -17,7 +17,7 @@ async function createBTask(req, res) {
       // BTask client_id is allowNull: true, so only business_id causes this if not provided
       return res.status(400).json({ error: 'Invalid foreign key provided. Ensure business_id exists and client_id (if provided) exists.' });
     }
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: 'Something went wrong' }); 
   }
 }
 

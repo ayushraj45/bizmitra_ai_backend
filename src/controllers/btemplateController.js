@@ -20,7 +20,7 @@ const getBTemplates = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}; 
 
 const getBTemplate = async (req, res) => {
   try {

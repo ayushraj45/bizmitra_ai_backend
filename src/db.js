@@ -4,7 +4,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { pathToFileURL } from 'url';
 
-dotenv.config();
+dotenv.config(); 
 
 const __dirname = path.resolve();
 
