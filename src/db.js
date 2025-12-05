@@ -6,44 +6,66 @@ import { pathToFileURL } from 'url';
 
 dotenv.config();
 
-const rdsCa = fs.readFileSync("ap-south-1-bundle.pem");
+const __dirname = path.resolve();
 
-const __dirname = path.resolve(); // for ESM
+// SSL Configuration
+let dialectOptions = {};
+if (process.env.DB_SSL_CA_PATH) {
+  try {
+    const rdsCa = fs.readFileSync(path.resolve(process.env.DB_SSL_CA_PATH));
+    dialectOptions = {
+      ssl: {
+        require: true,
+        ca: [rdsCa],
+      },
+    };
+  } catch (error) {
+    console.warn("Warning: SSL Certificate defined but not found at path. connecting without specific CA.");
+  }
+} else if (process.env.NODE_ENV === 'production') {
+   dialectOptions = {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false 
+      }
+   }
+}
+
 const sequelize = new Sequelize(process.env.DB_URL, {
   dialect: 'postgres',
-  logging: false,
-  dialectOptions: {
-  ssl: {
-    require: true,
-    ca: [rdsCa], // Trusts only this CA
-  }
-},
+  logging: false, // Set to console.log to see SQL queries
+  dialectOptions: dialectOptions,
 });
 
 const models = {};
 
-// Dynamically import all models
-const modelsDir = path.join(__dirname, 'src','models');
-const modelFiles = fs.readdirSync(modelsDir).filter(file => file.endsWith('.js'));
-
-for (const file of modelFiles) {
-  const filePath = path.join(modelsDir, file);
-const { default: modelDef } = await import(pathToFileURL(filePath).href);
+const loadModels = async () => {
+  const modelsDir = path.join(__dirname, 'src', 'models');
   
-  // Check for initModel (like in previous example)
-  if (typeof modelDef.initModel === 'function') {
-    const model = modelDef.initModel(sequelize);
-    models[model.name] = model;
-  }
-}
+  if (fs.existsSync(modelsDir)) {
+    const modelFiles = fs.readdirSync(modelsDir).filter(file => file.endsWith('.js'));
 
-// Optional: setup associations if you have them
-Object.values(models).forEach(model => {
-  if (typeof model.associate === 'function') {
-    model.associate(models);
-  }
-});
+    for (const file of modelFiles) {
+      const filePath = path.join(modelsDir, file);
+      const { default: modelDef } = await import(pathToFileURL(filePath).href);
 
-await sequelize.sync({ alter: true }); // only for dev
+      if (modelDef && typeof modelDef.initModel === 'function') {
+        const model = modelDef.initModel(sequelize);
+        models[model.name] = model;
+      }
+    }
+
+    // Setup associations
+    Object.values(models).forEach(model => {
+      if (typeof model.associate === 'function') {
+        model.associate(models);
+      }
+    });
+  } else {
+    console.warn('Models directory not found. Skipping model loading.');
+  }
+};
+
+await loadModels();
 
 export { sequelize, models };

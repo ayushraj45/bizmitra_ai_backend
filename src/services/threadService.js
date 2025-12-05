@@ -1,62 +1,28 @@
 import { models } from "../db.js";
 
-/**
- * Creates a new Thread record.
- * @param {object} data - The Thread data.
- * @returns {Promise<object>} The created Thread object.
- */
 async function createThread(data) {
-  const thread = await models.Thread.create(data);
-  return thread;
+  return await models.Thread.create(data);
 }
 
-/**
- * Retrieves all Thread records.
- * @returns {Promise<Array<object>>} An array of Thread objects.
- */
 async function getAllThreads() {
-  const threads = await models.Thread.findAll();
-  return threads;
+  return await models.Thread.findAll();
 }
 
-/**
- * Retrieves a single Thread record by its ID.
- * @param {string} id - The ID of the Thread.
- * @returns {Promise<object|null>} The Thread object if found, otherwise null.
- */
 async function getThreadById(id) {
-  const thread = await models.Thread.findByPk(id);
-  return thread;
+  return await models.Thread.findByPk(id);
 }
 
-/**
- * Updates an existing Thread record.
- * @param {string} id - The ID of the Thread to update.
- * @param {object} data - The updated Thread data.
- * @returns {Promise<object|null>} The updated Thread object if found, otherwise null.
- */
 async function updateThread(id, data) {
   const thread = await models.Thread.findByPk(id);
-  if (!thread) {
-    return null;
-  }
-  await thread.update(data);
-  return thread;
+  if (!thread) return null;
+  return await thread.update(data);
 }
 
-/**
- * Deletes a Thread record by its ID.
- * @param {string} id - The ID of the Thread to delete.
- * @returns {Promise<number>} The number of destroyed rows (0 or 1).
- */
 async function deleteThread(id) {
-  const deletedRows = await models.Thread.destroy({
-    where: { id }
-  });
-  return deletedRows;
+  return await models.Thread.destroy({ where: { id } });
 }
 
-async function findThreadByPhoneNumber(phoneNumber, assistantId ) {
+async function findThreadByPhoneNumber(phoneNumber, assistantId) {
   return await models.Thread.findOne({
     where: {
       client_phone_number: phoneNumber,
@@ -65,20 +31,21 @@ async function findThreadByPhoneNumber(phoneNumber, assistantId ) {
   });
 }
 
+// BUG FIX: Variable 'client' was undefined, changed to 'thread'
 async function findOrCreateThread(phoneNumber, assistantId) {
-  let thread = await findThreadByPhoneNumber(phoneNumber, assistantId)
-  if(!client) {
-    client = createThread({
+  let thread = await findThreadByPhoneNumber(phoneNumber, assistantId);
+  if (!thread) {
+    thread = await createThread({
       client_phone_number: phoneNumber,
-      assistantId: businessId,
+      assisstant_id: assistantId, 
     });
   }
-    return thread
+  return thread;
 }
 
-async function findAssistantThreadId(threadId){
-  const threadToReturn = await getThreadById(threadId)
-  return threadToReturn.assistantThread_id;
+async function findAssistantThreadId(threadId) {
+  const thread = await getThreadById(threadId);
+  return thread?.assistantThread_id;
 }
 
 export default {
