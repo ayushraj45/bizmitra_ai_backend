@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bizmitra-api
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: bizmitra-api
+  template:
+    metadata:
+      labels:
+        app: bizmitra-api
+    spec:
+      containers:
+      - name: backend
+        image: ai_waba_agent-api:latest 
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_URL
+          value: "postgres://postgres:Strath_3ayush@postgres:5432/waba_agent_db"
+        envFrom:
+        - secretRef:
+            name: bizmitra-env  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bizmitra-api-service
+spec:
+  type: NodePort
+  selector:
+    app: bizmitra-api
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30000

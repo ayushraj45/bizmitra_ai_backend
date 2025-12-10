@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_URL=postgres://postgres:Strath_3ayush@postgres:5432/waba_agent_db
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Strath_3ayush
+      POSTGRES_DB: waba_agent_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
