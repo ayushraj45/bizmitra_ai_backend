@@ -1,6 +1,6 @@
 # BizMitra AI Backend – NodeJS Scheduling & Meta Webhooks
 
-BizMitra AI Backend is a NodeJS service that powers BizMitra’s WhatsApp‑based AI assistant, handling Meta webhooks, AI agent orchestration, scheduling, and website configuration from a production‑ready, containerized backend.
+BizMitra AI Backend is a NodeJS service that powers BizMitra’s WhatsApp‑based and website-based(widget) AI assistant, handling Meta webhooks, AI agent orchestration, scheduling, and website configuration from a production‑ready, containerized backend, working smoothly within a Kubernetes Cluster.
 
 ***
 
@@ -22,9 +22,8 @@ This project sits at the center of BizMitra’s messaging and automation stack.
 - **Database**: Postgres / Configured via `db.js` with a dedicated connection layer for persistence.
 - **Infrastructure**:
   - `docker-compose.yml` for containerized local and production‑like environments.
-  - CI/CD configuration present in the repo to streamline deployment.
-
-This demonstrates practical experience building real NodeJS backends that are deployable via containers and pipelines.
+- **k8s**: Kubernetes cluster detailed in kind-config.yaml, /k8s file configure the postgres and backend app.
+This demonstrates practical experience building real NodeJS backends that are deployable via containers and clusters.
 
 ***
 
